@@ -1,0 +1,214 @@
+---
+title: "3-Variables aleatorias I"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Distribuciones de variables aleatorias discretas
+
+----
+
+Sea la VA X: "nº de caras en n lanzamientos de una moneda
+cuya probabilidad de cara es p". Estudia su distribución para el caso
+$p=1/2$, $n=100$ mediante la función de probabilidad.
+
+```{r}
+p_heads <- function(x, n, p) {
+  # ???????????????????
+}
+
+x = 0:100
+p = p_heads(x,  100, 0.5)
+plot(x, p, type = 'h', xlab = "x", ylab = "p(X=x)", 
+     main = "Función de probabilidad")
+
+```
+
+--- 
+
+Escribe una función de R para la función de distribución de la VA aleatoria
+X: ''nº de caras en 100 lanzamientos de una moneda cuya probabilidad de cara es 0.5".
+Dibújala y úsala para responder a las siguientes preguntas:
+
+  * $P(40 \leq X \leq 60)$
+  * $P(40 < X < 60)$
+  * $P(40 \leq X < 60)$
+  
+```{r}
+# WARNING: Not properly vectorized!
+F_heads <- function(x, n, p) {
+  # sum(p_heads(???????????????, n, p))
+}
+# Due to non-vectorization --> FAILS: F_heads(0:2, 3, 0.5)
+# To correct it:
+F_heads <- Vectorize(F_heads)
+
+# P(40 <= X <= 60)
+# ???????????????????????
+
+# P(40 < X < 60)
+# ???????????????????????
+
+# P(40 <= X < 60)
+# ???????????????????????
+ 
+#plot(?????????????, type = "s", xlab="x", ylab="F(x)", 
+#     main = "Función de distribución",
+#     ylim=c(0,1)
+#)
+```
+
+--- 
+
+Halla la función de probabilidad de X: ''nº de caras en 2 lanzamientos de
+una moneda cuya probabilidad de cara es 0.5'' a partir de la siguiente función
+de distribución:
+
+```{r}
+F_values = c('0' = 0.125, '1' = 0.5, '2' = 0.875, '3' = 1)
+plot(0:3, F_values, type = "s", xlab="x", ylab="F(x)", main = "Función de distribución",
+     ylim=c(0, 1), yaxt="n")
+axis(2, at = seq(0, 1, by = 0.125), las=2)
+```
+  
+  
+# Esperanza varianza y otros estadísticos resumen
+## Medidas de tendencia central
+
+---- 
+
+La mediana y la moda de X (''nº de caras en 100 lanzamientos de una moneda
+sin trucar'') son fáciles de calcular por razonamiento. Realiza esos mismos
+cálculos usando R.
+
+```{r}
+## ?????????????
+```
+
+
+---- 
+
+Calcula la esperanza de la variable aleatoria X:''nº de caras en 100 lanzamientos
+de una moneda sin trucar'' usando 1) la definición y 2) simulaciones. ¿Cuadra
+con tu intuición?
+
+```{r}
+# Definición
+xs <- 0:100
+ps <- p_heads(0:100, 100, 0.5)
+# ??????????????
+
+
+# Simulación
+sims <- replicate(5000, {
+  #????????
+})
+```
+
+
+---
+
+Un jugador gana 1 euro si al tirar un dado obtiene un 1 o un 3; pierde 2 euros
+si sale un 2, 4, 6; y gana 4 euros si sale un 5. ¿Cuál es la ganancia esperada? 
+¿Jugarías a este juego?
+
+```{r}
+# ???????????
+```
+
+# Distribuciones conjuntas de variables discretas
+## Distribuciones conjuntas de variables discretas
+
+----
+    
+Se lanza una moneda $n$ veces (prob. de cara es $p$). Considera las VAs X:
+''nº de caras'' e  Y: ''nº de caras iniciales (antes de la primera cruz o del fin
+del experimento)''. Halla la distribución conjunta para cualquier $n$ y $p$ y
+luego particulariza para $n=4$,$p=0.5$.
+
+```{r}
+joint_xy = function(x, y, n, p) {
+  # ??????????????????
+}
+
+# probs <- ?????????????
+# colnames(probs) = paste("Y =", 0:4)
+# rownames(probs) = paste("X =", 0:4)
+# probs
+ 
+```
+
+----
+
+Partiendo de la función de probabilidad conjunta del ejemplo anterior,
+($n=4$ $p=0.5$), calcula las funciones de probabilidad marginales para
+X (nº de caras) e Y (nº de caras iniciales).
+
+```{r}
+# ???
+```
+
+## Distribuciones condicionales de variables discretas
+
+----
+
+En una urna hay dos monedas trucadas con probabilidad de cara $p_0=0.4$ y $p_1=0.6$.
+Se elige una al azar y se tira 100 veces. Sea X:''nº de caras obtenidas'' e 
+Y: ''moneda elegida''. Obtener la función de probabilidad de X.
+
+```{r}
+p_bimodal <- function(x) {
+  p_0 <- 0.4
+  p_1 <- 0.6
+  x # Replace ?????????????
+}
+plot(0:100, p_bimodal(0:100), type = 'h', xlab="x", ylab="p(x)")
+```
+
+----
+
+Si se han obtenido X=48 caras, ¿cuál es la probabilidad de que la moneda usada
+sea la correspondiente a $p_0$?
+
+```{r}
+# ???
+```
+
+
+## Estadísticos de variables aleatorias conjuntas
+
+Sea X:''Cantidad mensual de lotes comprados por una empresa a su proveedor'' e 
+Y: ''Precio por lote ofertado por el proveedor (en miles de euros)''. 
+La distribución conjunta de ambas variables se recoge en la siguiente tabla:
+
+```{r}
+probs = matrix(
+  c(0.00, 0.00, 0.03, 0.18,
+    0.00, 0.04, 0.24, 0.02,
+    0.02, 0.23, 0.04, 0.00,
+    0.16, 0.04, 0.00, 0.00),
+  byrow = TRUE,
+  ncol = 4
+)
+rownames(probs) <- paste0("y=", seq(1, 2.5, by=0.5))
+colnames(probs) <- paste0("x=", 1:4)
+```
+
+¿Cuál es el coste esperado para la empresa en el siguiente mes de actividad?
+
+```{r}
+# outer(??????)
+# ???
+```
+
+---- 
+
+Calcula la correlación entre X e Y en el problema de la empresa y el proveedor.
+
+```{r}
+# ???
+```

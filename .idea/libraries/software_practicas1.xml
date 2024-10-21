@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="software_practicas1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/arquitectura/software_practicas.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

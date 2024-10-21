@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/mtp/abstractfactory/abstractFactory/abstractFactory.iml" filepath="$PROJECT_DIR$/mtp/abstractfactory/abstractFactory/abstractFactory.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/abstractfactory/abstractFactory2/abstractFactory2.iml" filepath="$PROJECT_DIR$/mtp/abstractfactory/abstractFactory2/abstractFactory2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/abstractfactory/abstractFactory3/abstractFactory3.iml" filepath="$PROJECT_DIR$/mtp/abstractfactory/abstractFactory3/abstractFactory3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/adapter/adapter/adapter.iml" filepath="$PROJECT_DIR$/mtp/adapter/adapter/adapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/adapter/adapter2/adapter2.iml" filepath="$PROJECT_DIR$/mtp/adapter/adapter2/adapter2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/bridge/bridge/bridge.iml" filepath="$PROJECT_DIR$/mtp/bridge/bridge/bridge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/bridge/bridge2/bridge2.iml" filepath="$PROJECT_DIR$/mtp/bridge/bridge2/bridge2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/bridge3/bridge3.iml" filepath="$PROJECT_DIR$/mtp/bridge3/bridge3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/entrega1/entrega1.iml" filepath="$PROJECT_DIR$/mtp/entrega1/entrega1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/ordenadores/factory/factory.iml" filepath="$PROJECT_DIR$/mtp/ordenadores/factory/factory.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/ordenadores/ordenadores.iml" filepath="$PROJECT_DIR$/mtp/ordenadores/ordenadores.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtp/prototype/prototype.iml" filepath="$PROJECT_DIR$/mtp/prototype/prototype.iml" />
+      <module fileurl="file://$PROJECT_DIR$/segundo.iml" filepath="$PROJECT_DIR$/segundo.iml" />
+    </modules>
+  </component>
+</project>

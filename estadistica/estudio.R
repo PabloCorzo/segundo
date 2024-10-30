@@ -1,4 +1,5 @@
 source("tema2/utils.R")
+source("utils.R")
 #5
 f5 <- function(x,y){
   ifelse(((x==1|x==2|x==3)&(y==1|y==2|y==3)),yes=x*y,no=0)
@@ -140,3 +141,61 @@ covf <- Vectorize(cov)
 cov <- integrate2_dxdy(cov,function(x)0,function(x)1,0,1)$value
 #MULTIPLICAR LAS DOS RAICES DE LAS VARIANZAS; COMO SON IGUALES SE CANCELA Y QUEDA SOLO 1
 corr <- cov/((11/144))
+
+
+#28
+#X <- n de pacientes que llegan al hospital
+#Y <- n de pacientes que son ingresados
+X <- rpois(n= 10000,5)
+#EN VERDAD ES Y|X <- BINOM(x,0.1)
+Y <- rbinom(n= 10000,X,0.1)
+hist(Y)
+#Funcion de distribucion: P(Y = y)
+#se puede hacer mediante simulaciones o mediante manipulacion matematica
+#Problema de árbol (probabilidad condicionada)
+#sum(P(X = x)*P*(Y|X=x))
+p_y <- function(y){
+  xs <- 0:100
+  sum(dpois(xs,5)*dbinom(y,xs,0.1))
+}
+p_y <- Vectorize(p_y)
+ys <- p_y(0:20)
+#P(X = n | Y = 10)
+px_y10 <- function(n){
+  pdenom <- p_y(10)
+  pnum <- dpois(n,5) * dbinom(10,n,0.1)
+  pnum/pdenom
+}
+px_y10 <- Vectorize(px_y10)
+#E[X|Y = 10] = sum(xs * px_y10(xs))
+E <- sum(0:1000 * px_y10(0:1000))
+
+#40
+#f(x) = exp(-x), lambda 1
+#f(y) = 2*exp(-2*y) lambda 2
+#se necesita la probabilidad conjunta, pero como son independientes se puede hacer un outer
+#P(X > 2, Y > 2)
+(1-pexp(2,1))*(1-pexp(2,2))
+#c
+#D: defectuosos al dia
+#X: t hasta fallo
+#1000
+#D: Binom(1000,p(X< 1/52)) X se mide en años
+
+
+#10
+#3 bolas blancas
+#5 bolas negras
+#Orden y repeticion: PEPPER
+#Con distincion y orden:
+#LAPLACE: #CASOS FAVORABLES/#CASOS TOTALES
+#TOTALES POR PEPPER(8!/(5!*3!))
+totales <- choose(8,j)
+#FAVORABLES
+#X1 = 3, primera blanca en pos 3
+#COMPLETAR:
+#PEPPER: 2 NEGRAS Y 1 BLANCAS EN NNBNB
+favorables <- choose(3,k)
+
+#36
+#X n tazas adivinadas

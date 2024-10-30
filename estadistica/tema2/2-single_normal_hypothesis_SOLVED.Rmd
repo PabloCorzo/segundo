@@ -1,0 +1,222 @@
+---
+title: "Test de hipótesis para una población normal"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Introducción y test de hipótesis de dos colas
+
+### Homeopatía y pérdida de peso
+
+Un producto homeopático afirma que **"gracias a su uso, perderás 2 Kg en dos semanas"**.
+
+Escéptico ante esta afirmación, reclutas a 50 personas de tu ciudad para participar
+en un experimento. Las personas usan el producto homeopático durante dos semanas
+y reportan su pérdida de peso (por ejemplo, $x_i=3$ significaría que se han perdido
+3 Kg, mientras que $x_i=-3$ significaría que se han ganado 3). Datos en 
+"homeo\_weight\_loss.csv".
+
+En base a los datos, ¿es creible la afirmación del producto homeopático? Por sencillez, 
+asume que la pérdida de peso tiene desviación típica poblacional $\sigma=2.5$.
+
+```{r}
+library("tidyverse")
+DATAFOLDER <- "data_2"
+
+weight_loss <- read_csv(file.path(DATAFOLDER, "homeo_weight_loss.csv"), 
+                        show_col_types = FALSE)
+sample_mean <- mean(weight_loss$weight_loss_Kg)
+
+# Not required but nice
+x <- seq(-1, 4, by=0.01)
+ggplot(data.frame(x=x, y=dnorm(x, mean=2, sd=2.5/sqrt(nrow(weight_loss)))),
+       aes(x=x, y=y, col="Distribution under null hypothesis")) + geom_line() +
+  geom_vline(aes(xintercept=sample_mean, col="sample mean"),linewidth=1.2, linetype=2)
+
+sample_mean <- mean(weight_loss$weight_loss_Kg)
+z <- (sample_mean - 2) / (2.5 / sqrt(nrow(weight_loss)))
+print(paste("p - value = ",  round(2 * pnorm(z), 12)))
+```
+
+### Homeopatía y pérdida de peso: T-test
+
+En el ejercicio anterior hemos asumido que $\sigma$ es conocida. Como sabemos,
+esto ocurre muy rara vez en la práctica.
+
+Repite el test de hipótesis para el problema de la pérdida de peso si $\sigma$
+es desconocida. ¿Cuál sería tu conclusión?
+
+```{r}
+print(paste("p-value = ",  round(
+  t.test(weight_loss$weight_loss_Kg, mu = 2)$p.value, 8)
+))
+```
+
+
+### $H_0$ no demuestra nada
+Interpreta el siguiente fragmento de código...
+
+```{r}
+set.seed(42)
+x <- rnorm(30, mean = 0, sd = 5)
+print(c(
+  t.test(x, mu = 1)$p.value, 
+  t.test(x, mu = -1)$p.value
+))
+```
+
+### Es posible cometer errores en los test de hipótesis (conclusiones incorrectas)
+```{r}
+set.seed(4)
+x <- rnorm(30, mean = 0, sd = 5)
+print(
+  t.test(x, mu = 0)$p.value
+)
+```
+
+### Interpretación de $\alpha$
+Completa el siguiente fragmento de código para verificar la siguiente interpretación
+de $\alpha$: Si repetimos el test muchas veces,
+**rechazaremos la $H_0$ siendo esta correcta un $\alpha$\% de veces**
+
+```{r}
+N <- 5000
+alpha <- 0.05
+
+sims <- replicate(N, {
+  # H0: mu = 0
+  x <- rnorm(100, mean = 0)            # Genera muestras de H0 (H0 es correcta)
+  test <- t.test(x, mu = 0)$p.value    # Testea H0
+  # Añade condición de éxito para calcular la probabilidad de
+  # "Rechazar H_0 a pesar de ser correcta"
+  # ?????????????????????????????????????????????
+})
+print(paste("alpha =", alpha, "| p(incorrectly reject H0) = ", mean(sims)))
+```
+
+# Test de hipótesis de una sola cola y tamaño del efecto
+
+### Test de una sola cola 
+Un producto homeopático afirma que "gracias a su uso, perderás **al menos** 2 Kg en dos semanas"...
+¿Es creíble esta afirmación?
+
+```{r}
+test <- t.test(weight_loss$weight_loss_Kg, alternative = "less", mu = 2)$p.value
+print(paste("p-value = ", round(test, 10)))
+```
+
+A este tipo de problemas se les conoce como **hipótesis de una sola cola**
+(Vs. **hipótesis de dos colas**).
+
+### Fármaco para pérdida de peso
+Gracias a tu éxito con el análisis del producto homeopático, una farmacéutica
+interesada en desarrollar un fármaco para la pérdida de peso te contrata.
+La empresa quiere comercializar su (carísimo) producto con un eslogan del tipo
+"Hay evidencia científica de nuestro producto te hará perder peso si lo usas dos meses".
+
+Te facilitan los datos de "pharma\_weight\_loss.csv". ¿Hay suficiente evidencia
+de que el fármaco te hace perder peso? (Usa $\alpha=0.05$.)
+
+```{r}
+pharma <- read.csv(file.path(DATAFOLDER, "pharma_weight_loss.csv"))
+wl <- pharma$weight_loss_Kg
+test <- t.test(pharma$weight_loss_Kg, alternative = "greater")
+print(paste("P-value = ", round(test$p.value, 5)))
+```
+¿Tú crees que alguien comprará el producto?
+**No hay que confundir la significancia estadística con la relevancia práctica**.
+Para esto último debemos usar **ICs** o **el tamaño del efecto**.
+
+### Tamaño del efecto
+Calcula el tamaño del efecto para el problema del fármaco. ¿Cómo lo interpretas?
+Usa la siguiente [tabla]{https://imaging.mrc-cbu.cam.ac.uk/statswiki/FAQ/effectSize}.
+
+```{r}
+library("easystats") # load effectsize
+cd <- effectsize::effectsize(test)
+print(paste("Cohens d = ", round(cd$Cohens_d, 3)))
+```
+
+Siempre que hagas un test de medias, 
+**usa el tamaño del efecto o ICs para complementar los p-valores**.
+
+### ICs unilaterales
+Calcula el **IC unilateral** asociado al test.
+
+```{r}
+print(test$conf.int)
+```
+
+### Test para la varianza
+Los test de cociente intelectual (CI) están diseñados para que la desviación típica
+poblacional sea de 15 puntos. Sin embargo, en los procesos de traducción de
+un test "oficial" de CI pueden surgir desajustes.
+
+Por ejemplo, "iq\_spanish.csv" tiene los resultados de un test de CI
+traducido del inglés al español. ¿Hay evidencia de que la desviación típica
+es distinta de 15 y de que, por tanto, debe revisarse la traducción? Compara tus
+decisiones con un nivel de significación del 5\% y del 1\%. 
+
+```{r}
+data <- read_csv(file.path(DATAFOLDER, "iq_spanish.csv"), show_col_types = FALSE)$iq
+n <- length(data)
+stat <- (n - 1) * var(data) / 15 ^ 2
+alpha <- 0.05
+cis <- (n - 1) * var(data) / c(qchisq(1 - alpha / 2, n -1), qchisq(alpha / 2, n - 1))
+print(paste("P-value =", round(2 * (1 - pchisq(stat, n - 1)), digits = 3)))
+print(paste0("Confidence interval = (", round(cis[1], 4), ", ", round(cis[2], 4),")"))
+```
+
+Lo razonable sería repetir el experimento con más muestras. Ahora bien,
+¿con cuántas?
+
+
+### Potencia de un test
+Como $\hat{s}^2=388.6902$, escribe una función que calcule la probabilidad de
+rechazar $H_0$ si $\sigma^2=388.6902$ para un número de muestras $n$. Completa
+el siguiente código:
+
+```{r}
+power_var_test <- function(n, H0_sigma2 = 15 ^ 2, true_sigma2 = 388.6902,
+                           significance = 0.05, N = 5000) {
+  sims <- replicate(N, {
+    data <- rnorm(n, sd = sqrt(true_sigma2))
+    var_stat <- 0 # ????????????????????????????????
+    p_value <- 0  # ????????????????????????????????
+    p_value < significance
+  })
+  mean(sims)
+}
+```
+
+### Potencia de un test: tamaño de la muestra
+Halla ahora el número de muestras necesarias para obtener una potencia de test
+del 90\%.
+
+```{r}
+power_var_test <- Vectorize(power_var_test)
+ns <- seq(50, 80, by=1)
+plot(ns, power_var_test(ns, N = 10000))
+abline(h='0.9', lty=2, lwd=2, col=2)
+print("Se necesitan sobre 70 muestras")
+```
+
+### Potencia del T-test: número de muestras
+Según la estadísticas oficiales, la media de peso de las mujeres de cierto país
+es de 63.5 Kg (con desviación típica 4.1). Sin embargo, un equipo de 
+investigadores cree que debido a cambios en la alimentación la media se ha 
+incrementado. ¿Cuántas muestras necesitarán para poder detectar un incremento de
+medio Kg con un nivel de significación del 1\% y una potencia del 90\%? Usa 
+*power.t.test*.
+
+```{r}
+ptest <- power.t.test(delta = 1, sd = 4.1, sig.level = 0.01, power = 0.9,
+             type = "one.sample", alternative = "one.sided")
+print(paste("Se necesitarán", round(ptest$n, 3), "muestras"))
+```

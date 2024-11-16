@@ -124,10 +124,26 @@ Te facilitan los datos de "pharma\_weight\_loss.csv". ¿Hay suficiente evidencia
 de que el fármaco te hace perder peso? (Usa $\alpha=0.05$.)
 
 ```{r}
-pharma <- read.csv(file.path(DATAFOLDER, "pharma_weight_loss.csv"))
+library("effectsize")
+pharma <- read.csv("all_data/all_data/data_2/pharma_weight_loss.csv")
 wl <- pharma$weight_loss_Kg
+medmuestral <- mean(wl)
 test <- t.test(pharma$weight_loss_Kg, alternative = "greater")
 print(paste("P-value = ", round(test$p.value, 5)))
+es <- effectsize(test)
+#https://imaging.mrc-cbu.cam.ac.uk/statswiki/FAQ/effectSize
+#NO HAY QUE ACEPTAR UNA HIPOTESIS Y RECHAZAR LA OTRA
+#HAY QUE CONTRASTAR EVIDENCIA YA QUE NO SIEMPRE HAY SUFICIENTE COMO PARA RECHAZAR O ACEPTAR LAS HIPOTESIS
+#print("no existe suficiente evidencia como para rechazar H0")
+#print("existe evidencia en los datos que contradicen la hipotesis nula")
+#SE REPORTA EL P_VALOR
+#CONTEXTUALIZAR Y APOYAR EL PASO ANTERIOR USANDO UN INTERVALO DE CONFIANZA
+#USAR EL TAM.EFECTO PARA CATEGORIZAR LA RELEVANCIA EN BAJA/MEDIA/ALTA
+paste0("existe evidencia a favor de que el medicamento ayuda a perder peso ",test$p.value)
+paste0("la perdida media minima se estima como ", 0.06,"kg, con 95% de confianza")
+print("el tamaño del efecto es bajo (Cohens´ D: 0.11), apuntando a la poca relevancia practica de este resultado")
+
+
 ```
 ¿Tú crees que alguien comprará el producto?
 **No hay que confundir la significancia estadística con la relevancia práctica**.

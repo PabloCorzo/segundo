@@ -38,6 +38,11 @@ es desconocida. ¿Cuál sería tu conclusión?
 
 ```{r}
 t.test(pesos$weight_loss_Kg,mu = 2)$p.value
+
+#para 1 cola (H0)
+t.test(pesos$weight_loss_Kg, mu = 2 ,alternative = "less")
+#HA
+t.test(pesos$weight_loss_Kg, mu = 2, alternative = "greater")
 ```
 
 
@@ -105,7 +110,9 @@ Te facilitan los datos de "pharma\_weight\_loss.csv". ¿Hay suficiente evidencia
 de que el fármaco te hace perder peso? (Usa $\alpha=0.05$.)
 
 ```{r}
-# ??
+farmaco <- read.csv("all_data/all_data/data_2/pharma_weight_loss.csv")
+hist(farmaco$weight_loss_Kg)
+t.test(farmaco$weight_loss_Kg,alternative = "greater")
 ```
 ¿Tú crees que alguien comprará el producto?
 **No hay que confundir la significancia estadística con la relevancia práctica**.
@@ -140,7 +147,31 @@ es distinta de 15 y de que, por tanto, debe revisarse la traducción? Usa un niv
 de significación del 5\%.
 
 ```{r}
-# ??
+iqs <- read.csv("all_data/all_data/data_2/iq_spanish.csv")
+m <- mean(iqs$iq)
+v <- var(iqs$iq)
+sd <- sqrt(v)
+#1: VAs e hipotesis
+#X -> resultado del test de CI
+#H0 -> var = 15^2
+#Ha -> var != 15^2
+#Varianza muestral S^2 -> (n-1)*S^2/sd^2 es X^2n-1 (chi cuadrado de n-1) cuando son normales e independientes
+hist(iqs$iq) #Se asume normalidad
+#Ya que ,asumo poblacion infinita y por ello, independencia
+
+#2: CONTRASTAR DATOS VS H0 -> P_VALOR
+#bajo h0: var = 15^2
+n <- length(iqs$iq)
+statistic <- ((n-1)*v)/(15^2) # chi(n-1)
+tails <- 2*(1 - pchisq(statistic,n-1))
+plotter <- function(){
+  plot(0:100,dchisq(0:100,n-1),type = "l")
+  abline(v = statistic, col = 2)
+}
+plotter()
+#para un nivel de significacion de 5% no pasa el pvalor 0.05 -> rechazar h0
+#para un nivel de significacion de 1% pasa el pvalor 0.01 -> aceptar h0
+
 ```
 
 Lo razonable sería repetir el experimento con más muestras. Ahora bien,
@@ -155,13 +186,20 @@ el siguiente código:
 ```{r}
 power_var_test <- function(n, H0_sigma2 = 15 ^ 2, true_sigma2 = 388.6902,
                            significance = 0.05, N = 5000) {
+  #imagino mundo donde var no es 15^2
   sims <- replicate(N, {
     data <- rnorm(n, sd = sqrt(true_sigma2))
-    var_stat <- 0 # ????????????????????????????????
-    p_value <- 0  # ????????????????????????????????
+    var_stat <- var(data)
+    statistic <- ((n-1)*var_stat)/(H0_sigma2) # chi(n-1)
+    #ERROR EN EL PVALUE
+    p_value1 <- 2*(1-pchisq(statistic,n-1))
+    p_value2 <- 2*(1-pchisq(statistic,n-1))  
+    p_value <- min(p_value1,p_value2)
     p_value < significance
   })
+  mean(sims)
 }
+
 ```
 
 ### Potencia de un test: tamaño de la muestra
@@ -169,7 +207,11 @@ Halla ahora el número de muestras necesarias para obtener una potencia de test
 del 90\%.
 
 ```{r}
-# ??
+power_var_test <- Vectorize(power_var_test)
+ns <- seq(40,80,by = 5)
+powers <- power_var_test(ns)
+plot(ns,powers,type = "l")
+
 ```
 
 ### Potencia del T-test: número de muestras
@@ -181,5 +223,5 @@ medio Kg con un nivel de significación del 1\% y una potencia del 90\%? Usa
 *power.t.test*.
 
 ```{r}
-# ??
+power.t.test(delta = 0.5,power = 0.9,sd = 4.1,type = "one.sample",sig.level = 0.01,alternative = "one.sided")
 ```

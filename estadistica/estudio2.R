@@ -57,3 +57,33 @@ p <- 0.7
 l1 <- 1/10
 l2 <- 1/5
 #P(X = x) = 0.7/5 * exp(-x/5) + 0.03 * exp(-x/10)
+
+
+#49
+sims <- replicate(10000,{
+ pulls <- 0
+ chance <- 1
+ tries <- 0
+ while(pulls < 10){
+   tries <- tries + 1
+   try <- rbinom(1,1,chance)
+   if(try == 1){
+     chance <- chance - 0.1
+     pulls <- pulls + 1
+   }
+ }
+  tries
+})
+mean(sims)
+
+#50
+calc_imc_prob <- function(imc,n_sims){
+ alturas <- rnorm(n_sims,1.65,sqrt(0.0025))
+ pesos <- rnorm(n_sims,64,3)
+ imcs <- pesos/(alturas^2)
+ p <- mean(imcs > imc)
+ p
+}
+
+H <- rnorm(n_sims, 1.65, sqrt(0.0025))
+P <- rnorm(n_sims,66,1)

@@ -91,11 +91,13 @@ adder <- 0.5
 t <- 0
 tries <- 0
 #X camino escogido (A,B,C)
-sims <- replicate(10000,{
+sims <- replicate(1000000,{
+  
   camino <- which.max(rmultinom(1,1,c(pa,pb,pc)))
   if(camino == 1) t <- t + ta
   else if(camino == 2) t <- t + tb
   else if(camino == 3) t <- t + tc
+  
   while (camino != 3) {
     tries <- tries + 1
     camino <- which.max(rmultinom(1,1,c(pa,pb,pc)))
@@ -103,7 +105,7 @@ sims <- replicate(10000,{
     else if(camino == 2) t <- t + tb + (adder*tries)
     else if(camino == 3) t <- t + tc + (adder*tries)
   }
+  
   t
 })
 mean(sims)
-

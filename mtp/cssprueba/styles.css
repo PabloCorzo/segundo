@@ -1,0 +1,48 @@
+/* styles.css */
+body {
+    background-image:url('gokugod.jpg') ;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+  }
+  
+  .card {
+    /*(background-image: url('gokugod.jpg'); */
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center; 
+  }
+
+  
+  .card h2 {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;;
+    font-size: 1.5rem;
+    color: green;
+    margin-bottom: 10px;
+  }
+  
+  .card h3 {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 1.2rem;
+    color: black;
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 1.1rem;
+    color: pink;
+  }
+
+  

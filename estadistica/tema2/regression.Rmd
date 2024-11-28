@@ -450,6 +450,7 @@ la longitud del sépalo únicamente en función de la especie. Interpreta los co
 de la regresión.
 
 ```{r}
+library("ggplot2")
 data(iris)
 iris_model = lm(Sepal.Length ~ Species, iris)
 print(summary(iris_model))
@@ -499,7 +500,10 @@ estas variantes dan lugar a dos nuevas especies que llamas versicolor (V-I) y
 virginica (V-II). Te planteas dos preguntas científicas: 
 
 1. ¿Es el método V capaz de crear especies con el sépalo más grande?
+H0:1/2 mu vers + 1/2 mu virg = mu set  !!!!!!!!!!
+Ha:1/2 mu vers + 1/2 mu virg != mu set !!!!!!!!!!
 2. ¿Existe alguna diferencia entre V-I y V-II?
+mu vers - mu virg != 0 !!!!!!!!!!!!!!!!!!!111
 
 ```{r}
 suppressPackageStartupMessages(
@@ -509,10 +513,20 @@ suppressPackageStartupMessages(
 # a las vs juntas)
 iris$Species = relevel(iris$Species, "setosa")
 levels(iris$Species)
-contrasts(iris$Species)
 
+contrasts(iris$Species)
+#reescribir las formulas de antes en el orden en el que aparecen en esa operacion
+
+
+#-mu,1/2,1/2 -> cambiado de orden y cogiendo las constantes:
+#H0:1/2 mu vers + 1/2 mu virg = mu set
+# la segunda linea se hace con muvers - muvirg != 0 (hay que reorganizar)
 my_contrasts = rbind(
+  #PONER NOMBRE PORQUE EL ORDEN DE LAS RESTAS IMPORTAN
+  
+  #mu - setosa
   "V - setosa" = c(-1, 0.5, 0.5),
+  #versicolor - virginica
   "I - II" = c(0, 1, -1)
 )
 my_coding = get_contrasts_coding(my_contrasts)
@@ -520,7 +534,7 @@ contrasts(iris$Species) = my_coding
 contrasts(iris$Species)
 v_model = lm(Sepal.Length ~ Species, iris)
 summary(v_model)
-confint(v_model)
+  confint(v_model)
 ```
 
 El método V parace producir sépalos más grandes. Por otra parte, V-II es mejor
@@ -548,8 +562,30 @@ Añade la variable sexo al modelo de los salarios. ¿Cuál es la diferencia en g
 para hombres y mujeres de la misma altura? 
 
 ```{r}
-# ???
-# Resultado esperado: a igualdad de condiciones, los hombres ganan un 30.4% más que las mujeres
+earns <- read.csv("data/heights_earnings.csv")
+earns$sex <- factor(earns$sex)
+earns$ed <- factor(earns$ed)
+
+#Visualizar datos
+
+
+#Crear el modelo
+study_model = lm(log(earn) ~ (height + sex), earns)
+
+#Comprobar las asuunciones del modelo
+plot(study_model, ask  = F)
+
+isnorm <- performance::check_normality(study_model)
+plot(isnorm, type = "qq")
+
+#Summary y conclusiones
+summary(study_model)
+
+#8.5 + 0.018 * height + 0.26 * male
+#Hombres: 8.5 + 0.018 * height + 0.26
+#Mujeres: 8.5 + 0.018 * height 
+
+
 ```
 
 Añade la variable educación al modelo de los salarios. Modifica los contrastes
@@ -557,10 +593,34 @@ para responder a las siguientes preguntas:
 
 1. ¿Merece la pena estudiar "high school" o "universidad" o basta con quedarse en
 "elementary" (en términos de salario)?
+  H0:1/2 m hs + 1/2 m u = m el
+  Ha:1/2 m hs + 1/2 m u != m el
 2. ¿Merece la pena estudiar "universidad" comparado con "high school"?
+  m u - m hs != 0
 
 ```{r}
-# ??????
-# Resultado esperado: sí merece la pena, con incrementos en las ganancias del 83.58% y 33.68%, respectivamente.
+new_model <- lm(log(earn) ~ (height + sex + ed),earns)
+summary(new_model)
+#8.5 + 0.018 * height + 0.26 * male + 0.73 * uniorhigher
+#Hombres: 8.5 + 0.018 * height + 0.26
+#Mujeres: 8.5 + 0.018 * height 
+#Elementary:8.5 + 0.018 * height + 0.26 * male
+#Highschool:8.5 + 0.018 * height + 0.26 * male + 0.44
+#Uni or Higher:8.5 + 0.018 * height + 0.26 * male + 0.73
+
+contrasts(earns$ed)
+
+my_contrasts <- rbind(
+  " mu higher studies - el" = c(-1,0.5,0.5),
+  " hs - uni" = c(0,1,-1)
+)
+my_coding = get_contrasts_coding(my_contrasts)
+contrasts(earns$ed) = my_coding
+contrasts(earns$ed)
+v_model = lm(earn ~ ed, earns)
+summary(v_model)
+  confint(v_model)
+# Es mejor estudiar highschool o uni que quedarse con la elemental. (se cobrarían de media 10360 euros más)
+# Es aún mejor estudiar universidad que quedarse con highschool. (se cobrarían de media 7002 euros más con estudios universitarios)
 ```
 

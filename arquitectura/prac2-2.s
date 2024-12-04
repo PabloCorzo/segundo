@@ -16,4 +16,4 @@ add	$s0, $t0, $t2
 
 endIf: 
 
-sw   $s0, 4($t1)
+sw   $s0, 4($t1) 

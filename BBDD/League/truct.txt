@@ -1,0 +1,63 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE habilidad(
+nombre varchar(30) primary key not null,
+cd int not null default 0,
+coste int not null default 0);
+CREATE TABLE pasiva(
+nombre varchar(30) primary key not null,
+activacion text,
+foreign key(nombre) references habilidad(nombre));
+CREATE TABLE hab1(
+nombre varchar(30) primary key not null,
+dano int not null default 0,
+nombre_pasiva varchar(30),
+foreign key(nombre) references habilidad(nombre),
+foreign key(nombre_pasiva) references pasiva(nombre));
+CREATE TABLE hab2(
+nombre varchar(30) primary key not null,
+modificacion text,
+nombre_pasiva varchar(30),
+foreign key(nombre) references habilidad(nombre),
+foreign key(nombre_pasiva) references pasiva(nombre));
+CREATE TABLE hab3(
+nombre varchar(30) primary key not null,
+distancia int not null default 0,
+nombre_pasiva varchar(30),
+foreign key(nombre) references habilidad(nombre),
+foreign key(nombre_pasiva) references pasiva(nombre));
+CREATE TABLE hab4(
+nombre varchar(30) primary key not null,
+atributo varchar(20),
+nombre_pasiva varchar(30),
+foreign key(nombre) references habilidad(nombre),
+foreign key(nombre_pasiva) references pasiva(nombre));
+CREATE TABLE item(
+nombre varchar(20) primary key not null,
+precio int not null default 0,
+stats varchar(32) not null,
+tipo varchar(10) not null,
+descripcion text not null,
+nombre_pasiva varchar(30),
+nombre_hab1 varchar(30),
+foreign key(nombre_pasiva) references pasiva(nombre),
+foreign key(nombre_hab1) references hab1(nombre));
+CREATE TABLE runas(
+id integer primary key autoincrement,
+keystone char(1) not null, 
+settings char(10) not null);
+CREATE TABLE personaje(
+nombre varchar(30) primary key not null,
+stats varchar(64) not null,
+rol varchar(15) not null,
+equipo varchar(4) not null,
+runasid integer not null,
+check(equipo in ('rojo','azul'))
+foreign key(runasid) references runas(id));
+CREATE TABLE inventario(
+campeon varchar(30) not null,
+item varchar(20) not null,
+id integer primary key autoincrement,
+foreign key(campeon) references personaje(nombre),
+foreign key(item) references item(nombre));
+COMMIT;

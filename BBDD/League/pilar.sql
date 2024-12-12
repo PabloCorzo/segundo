@@ -1,0 +1,22 @@
+
+INSERT INTO pasiva VALUES('Headshot','After a set number of basic attacks or when attacking an enemy caught in her traps or net, her next basic attack deals bonus damage based on her critical strike chance');
+INSERT INTO pasiva VALUES('Guerrilla Warfare','If Teemo stands still for 1.5 seconds without taking damage, he becomes invisible indefinitely');
+INSERT INTO pasiva VALUES('Nightstalker','Grants invisibility for 1.5 seconds after a takedown and resets cooldown.');
+INSERT INTO pasiva VALUES('Perfection','Increases critical strike damage by 35% when critical chance exceeds 60%.');
+INSERT INTO pasiva VALUES('Immolate','Deals magic damage per second to nearby enemies and enhances basic attacks after immobilizing an enemy.');
+INSERT INTO pasiva VALUES('Torment','Deals bonus magic damage over time and increases damage based on enemy max health.');
+INSERT INTO pasiva VALUES('Resurrection','Revives the user upon death with 50% base health and mana after a 4-second delay.');
+INSERT INTO hab1 VALUES('Piltover Peacemaker',50,'Headshot');
+INSERT INTO hab1 VALUES('Blinding Dart',80,'Guerrilla Warfare');
+INSERT INTO hab2 VALUES('Yordle Snap Trap','sets a trap that roots enemies who step on it and reveals them for a short duration','Headshot');
+INSERT INTO hab2 VALUES('Move Quick','Teemo passively gains bonus movement speed unless he is damaged. When activated, Teemo sprints for a short duration, gaining even more movement speed','Guerrilla Warfare');
+INSERT INTO hab3 VALUES('90 Caliber Net',750,'Headshot');
+INSERT INTO hab3 VALUES('Toxic Shot',0,'Guerrilla Warfare');
+INSERT INTO hab4 VALUES('Ace in the Hole','Range','Headshot');
+INSERT INTO hab4 VALUES('Noxious Trap','Range','Guerrilla Warfare');
+INSERT INTO item VALUES('Duskblade of Draktharr',3100,'60ad, 18lethality, 20ah','Mythic','Grants bonus damage and invisibility after a takedown.','Nightstalker','Cosmic Binding');
+INSERT INTO item VALUES('Infinity Edge',3400,'70ad, 20crit','Legendary','Increases critical strike damage by 35% when crit chance is above 60%.','Perfection','Cosmic Binding');
+INSERT INTO item VALUES('Sunfire Aegis',3200,'500hp, 50armor, 50mr','Mythic','Deals AoE magic damage around the user and enhances basic attacks after immobilizing an enemy.','Immolate','Cosmic Binding');
+INSERT INTO item VALUES('Liandrys Anguish',3200,'80ap, 600mana, 20ah','Mythic','Deals bonus damage over time and increases damage based on enemy max health.','Torment','Blinding Dart');
+INSERT INTO personaje VALUES('Caitlyn','Headshot','Piltover Peacemaker','Yordle Snap Trap','90 Caliber Net','Ace in the Hole','630hp, 5.5regen, 34armor, 30mr, 330ms, 350mana, 6mregen, 52ad, 175crit,600range','Bot');
+INSERT INTO personaje VALUES('Teemo','Guerrilla Warfare','Blinding Dart','Move Quick','Toxic Shot','Noxious Trap','598hp, 5.5regen, 24armor, 30mr, 330ms, 250mana, 7mregen, 54ad, 500range','Top');

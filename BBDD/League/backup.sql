@@ -6,7 +6,8 @@ BEGIN TRANSACTION;
 CREATE TABLE habilidad(
 nombre varchar(30) primary key not null,
 cd int not null default 0,
-coste int not null default 0);
+coste int not null default 0,
+tipo int not null default 0);
 
 CREATE TABLE pasiva(
 nombre varchar(30) primary key not null,

@@ -3,7 +3,7 @@ PRAGMA foreign_keys=OFF;
 .mode column
 BEGIN TRANSACTION;
 
-CREATE TABLE habilidad(
+1CREATE TABLE habilidad(
 nombre varchar(30) primary key not null,
 cd int not null default 0,
 coste int not null default 0);
@@ -139,8 +139,7 @@ INSERT INTO hab2 VALUES('Ki Burst','Stuns nearby enemies for 0.75s','Stun');
 INSERT INTO hab3 VALUES('Valor',250,'Shield');
 INSERT INTO hab4 VALUES('Blade of the Exile','Attack Damage','Attack Boost');
 INSERT INTO runas VALUES(2,'P','213R330213');
-INSERT INTO personaje VALUES('Riven','Runic Blade','Broken Wings','Ki Burst','Valor','Blade of the Exile','630hp,N/A,8.5hpregen,N/A,33armor,64ad,32mr,175crit,340ms,125range','Fighter');
+INSERT INTO personaje VALUES('Riven','Runic Blade','Broken Wings','Ki Burst','Valor','Blade of the Exile','630hp,N/A,8.5hpregen,N/A,33armor,64ad,32mr,175crit,340ms,125range','Fighter','rojo',1);
 INSERT INTO sqlite_sequence VALUES('runas',2);
-
 
 COMMIT;

@@ -11,7 +11,6 @@ void main(){
 	printf("Introduce un numero mayor a 0: ");
 	int var; 
 	char input = scanf("%d",&var);
-	subtracter(&var);
 	printf("%d",var);
 	fflush(stdout);
 	while(var !=0){

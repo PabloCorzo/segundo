@@ -39,7 +39,7 @@ binom.test(160,200,p = 0.9,alternative = "less",conf.level = 0.99)
 
 
 #19
-#estimar mediance un IC al 99% de las vacas sanas y enfermas. datos en cows.csv
+#estimar mediane un IC al 99% de las vacas sanas y enfermas. datos en cows.csv
 #se puede asumir que las varianzas poblacionales son iguales
 #diferencia de medias de peso: ttest
 

@@ -169,7 +169,7 @@ a partir de ahora  calcularemos dichos contrastes con `emmeans`):
 ```{r}
 v_model_means = emmeans(v_model, "Species") 
 contrast_list = list('V-Setosa' = c(-1, 0.5, 0.5), 'I - II' = c(0, 1, -1))
-contrast(v_model_means, method = contrast_list, infer = c(TRUE, TRUE)) 
+contrast(v_model_means, method = contrast_list) 
 ```
 
 ### Ejemplo: asunciones de ANOVA
@@ -207,6 +207,7 @@ ggplot(anxiety, aes(x = pretest,y = posttest, col = group)) +
 
 # 2) Contrates 
 # No tenemos hipótesis :(
+
 contrasts(anxiety$group) = contr.helmert(3)
 
 # 3) Anova + asunciones
@@ -216,6 +217,7 @@ plot(anxiety_lm, ask = FALSE)
 summary(anxiety_lm)
 
 #DICE SI EL GRUPO AFECTA PERO NO DICE CUAL, HAY QUE HACER TEST POST HOC
+
 car::Anova(anxiety_lm, type = 3)
 
 # 4) Posthoc tests!
@@ -407,7 +409,8 @@ respuesta (para hombres y mujeres)? da una imagen incompleta del problema.
 
 ```{r}
 ggplot(drugs_df_2, aes(x=sex, y=response_time, col = drug)) + 
-  stat_summary() + 
+  stat_summary() +
+  
   stat_summary(geom="line", aes(group = drug))
 
 drugs_emms = emmeans(drugs_model_2, ~ drug | sex) 

@@ -4,5 +4,5 @@ public class Num implements Expression{
 
     public Num(int num){this.num = num;}
 
-    public int interpret(){return num;} 
+num    public int interpret(){return ;} 
 }

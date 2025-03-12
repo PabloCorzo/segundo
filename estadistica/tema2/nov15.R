@@ -1,17 +1,17 @@
 
-accidentes <- read.csv("all_data/all_data/accidents.csv")$x
+accidentes <- read.csv("tema2/all_data/all_data/accidents.csv")$x
 media <- mean(accidentes)
-
+n <- length(accidentes)
 
 media + c(1,-1) * qnorm(0.01) * sqrt(media/n)
 
-#n <- length(accidentes)
-#top <- media - qnorm(0.01)*sqrt(media/n) 
-#bottom <- media + qnorm(0.01)*sqrt(media/n) 
+
+top <- media - qnorm(0.01)*sqrt(media/n) 
+bottom <- media + qnorm(0.01)*sqrt(media/n) 
 #paste0(bottom , "  " , top)
 
 library("ggplot2")
-juries <- read.csv("all_data/all_data/data_4/juries.csv")
+juries <- read.csv("tema2/all_data/all_data/data_4/juries.csv")
 ggplot(juries,aes(x = race,fill = race)) + geom_bar()
 #H0: p >= 0.5
 #Ha: p < 0.5
@@ -30,7 +30,7 @@ binom.test(x = 4, n = 76 + 4, alternative = "less",p = 0.5)
 #H0: pb <= pa
 #Ha: pb > pa
 library("ggplot2")
-abt <- read.csv("all_data/all_data/data_4/ab_testing.csv")
+abt <- read.csv("tema2/all_data/all_data/data_4/ab_testing.csv")
 abt$has_clicked <- factor(abt$has_clicked)
 
 ggplot(abt,aes(x = page_design, fill = has_clicked)) + geom_bar(position = "fill")

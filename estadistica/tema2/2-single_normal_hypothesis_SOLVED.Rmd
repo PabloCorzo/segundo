@@ -125,7 +125,7 @@ de que el fármaco te hace perder peso? (Usa $\alpha=0.05$.)
 
 ```{r}
 library("effectsize")
-pharma <- read.csv("all_data/all_data/data_2/pharma_weight_loss.csv")
+pharma <- read.csv("tema2/all_data/all_data/data_2/pharma_weight_loss.csv")
 wl <- pharma$weight_loss_Kg
 medmuestral <- mean(wl)
 test <- t.test(pharma$weight_loss_Kg, alternative = "greater")
@@ -180,7 +180,7 @@ es distinta de 15 y de que, por tanto, debe revisarse la traducción? Compara tu
 decisiones con un nivel de significación del 5\% y del 1\%. 
 
 ```{r}
-data <- read_csv(file.path(DATAFOLDER, "iq_spanish.csv"), show_col_types = FALSE)$iq
+data <- read_csv("tema2/all_data/all_data/data_2/iq_spanish.csv", show_col_types = FALSE)$iq
 n <- length(data)
 stat <- (n - 1) * var(data) / 15 ^ 2
 alpha <- 0.05

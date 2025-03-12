@@ -74,6 +74,7 @@ age = seq(0, 12, 0.1)
 mean_height = 50 + 6.5 * age 
 # ... en torno a la cuál habrá fluctuaciones estadísticas que podemos asumir normales.
 epsilon = rnorm(length(mean_height), sd = 5)
+
 height = mean_height + epsilon
 
 df = data.frame(
@@ -86,7 +87,7 @@ ggplot(df, aes(x = age, y = height)) +
   geom_point() + 
   geom_line(aes(y = mean_height), col = 2)
 
-# OR...
+    # OR...
 # plot(x, y)
 # lines(x, expected_behaviour, col = 2)
 ```
@@ -147,15 +148,15 @@ intervalo. Los datos están disponibles en "hr.csv".
 ```{r}
 # 1) leer los datos
 #MY CODE
-  hr <- read.csv("data/hr.csv",sep = " ")
+  hr <- read.csv("tema2/data/hr.csv",sep = " ")
   ts <- seq(2,18,2)
   #scatterplot
   ggplot(hr,aes(x = temperature,y = heart_rate)) + geom_point()+geom_smooth(method = "lm")
 # 2) Crear un modelo lineal
- frog_model = lm(hr$heart_rate ~ hr$temperature,hr)
+ frog_model = lm(heart_rate ~ temperature,hr)
 # 3) Inferencia
  summary(frog_model)
- #2.13 + 1.77 * temperature
+ #heart rate = 2.13 + 1.77 * temperature
  
  #predicciones
  pred <- predict(frog_model,interval = "confidence")
@@ -218,8 +219,8 @@ if p > 0.05, or an overly confident claim. (Lewis G. Halsey, [The reign of p-val
 
 ### Ejemplo: intervalos de confianza en lm
 ```{r}
-# # summary(frog_model)
-# confint(frog_model)
+summary(frog_model)
+confint(frog_model)
 ```
 Los resultados sugieren que el ritmo_cardiaco de las ranas se incrementará
 1.77 bpms por cada grado Celsius, si bien un aumento de la frecuencia 
@@ -242,7 +243,7 @@ recordar las asunciones más importantes del modelo:
 plot(naive_model, ask = F) 
 
 # Comprobar la normalidad con qqplot puede ser difícil. Podemos apoyarnos en 
-# performance::check_normality (librería easystats)
+performance::check_normality(naive_model)
 
 # check_normality corre shapiro.test, pero tal y como resalta la documentación
 # "this formal test almost always yields significant results for the distribution
@@ -250,7 +251,7 @@ plot(naive_model, ask = F)
 is_norm = check_normality(naive_model)
 
 # Para hacer la inspección visual
-plot(is_norm, type = "qq", detrend = F) # probar con TRUE y FALSE
+plot(is_norm) # probar con TRUE y FALSE
 ```
 
 ## Transformaciones logarítmicas
@@ -259,12 +260,12 @@ Se desea estudiar la relación entre el tiempo de estudio y el rendimiento en
 un examen particular. Datos en "exam_scores.csv".
 
 ```{r}
-scores = read_csv("data/exam_scores.csv")
+scores = read_csv("tema2/data/exam_scores.csv")
 ggplot(scores, aes(x = study_time_hours, y = exam_score)) + 
   geom_point() + geom_smooth()
 ```
 
-Nótese que un aumento en el tiempo de estudio tiene un impacto sustancial en
+Nótese queme un aunto en el tiempo de estudio tiene un impacto sustancial en
 el rendimiento inicial, pero este impacto disminuye a medida que aumenta el 
 tiempo de estudio. Lo más reseñable para nuestro análisis es que la relación entre
 ambas variables es ¡NO-LINEAL! 
@@ -297,7 +298,7 @@ Usa `log_interpretation` de `utils.R`:
 
 ```{r}
 suppressPackageStartupMessages(
-  source("utils.R")
+  source("finalprep/utils.R")
 )
 log_interpretation(20.2753, "predictor", percent_increase = 20)
 ```
@@ -311,10 +312,11 @@ ganancias son ganancias anuales en dolares). Usa la transformación logarítmica
 sobre las ganancias para centrarte en el orden de magnitud.
 
 ```{r}
-earns <- read.csv("data/heights_earnings.csv")
+earns <- read.csv("tema2/data/heights_earnings.csv")
 
 #Visualizar datos
-ggplot(earns, aes(x = height, y = log(earn)))  + geom_jitter(width = .5, alpha = 0.4) + geom_smooth(method = "lm")
+ggplot(earns,aes(x = height, y = log(earn))) + geom_point()+geom_smooth(method = "lm")
+ggplot(earns,aes(x = height, y = log(earn)))  + geom_jitter(width = .5, alpha = 0.4) + geom_smooth(method = "lm")
 
 #Crear el modelo
 study_model = lm(log(earn) ~ (height), earns)
@@ -357,9 +359,9 @@ Añade la edad a tu modelo de los salarios para mejorar las predicciones.
 
 ```{r}
 library("GGally")
-source("utils.R")
+source("tema2/utils.R")
 
-df = read.csv("data/heights_earnings.csv")
+df = read.csv("tema2/data/heights_earnings.csv")
 ggpairs(df[, c("earn", "height", "age")])
 
 
@@ -392,7 +394,7 @@ Construye un modelo de regresión lineal para predecir el peso de una persona a 
 de los datos contenidos en "antrop.csv". Interpreta los coeficientes de la regresión.
 
 ```{r}
-antrop = read.csv("data/antrop.csv")
+antrop = read.csv("tema2/data/antrop.csv")
 
 antrop$male <- factor(antrop$male)
 
@@ -435,7 +437,9 @@ de 1960. Crea un modelo para predecir el peso de los individuos a partir
 de la altura y el sexo. Evalúa la bondad del modelo.
 
 ```{r}
-# ??
+howell <- read.csv("tema2/data/howell1.csv", sep = ";")
+hist(howell$weight)
+# !!!!!!!!!!!  NO ES UNA DISTRIBUCION NORMAL !!!!!!!!!!!!!!!!!!
 ```
 
 Sin ni siquiera usar `plot(howell_model)` ya somos capaces de ver que el ajuste
@@ -507,7 +511,7 @@ mu vers - mu virg != 0 !!!!!!!!!!!!!!!!!!!111
 
 ```{r}
 suppressPackageStartupMessages(
-  source("utils.R")   # cargamos get_contrasts_coding
+  source("finalprep/utils.R")   # cargamos get_contrasts_coding
 )
 # Cambiamos otra vez la especie referencia (no es necesario, pero para tener 
 # a las vs juntas)
@@ -562,7 +566,7 @@ Añade la variable sexo al modelo de los salarios. ¿Cuál es la diferencia en g
 para hombres y mujeres de la misma altura? 
 
 ```{r}
-earns <- read.csv("data/heights_earnings.csv")
+earns <- read.csv("tema2/data/heights_earnings.csv")
 earns$sex <- factor(earns$sex)
 earns$ed <- factor(earns$ed)
 
@@ -581,6 +585,9 @@ plot(isnorm, type = "qq")
 #Summary y conclusiones
 summary(study_model)
 
+
+log_interpretation(0.018,"response")
+log_interpretation(0.2661,"response")
 #8.5 + 0.018 * height + 0.26 * male
 #Hombres: 8.5 + 0.018 * height + 0.26
 #Mujeres: 8.5 + 0.018 * height 

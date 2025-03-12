@@ -22,7 +22,7 @@ se diseñan para que la desviación estándar poblacional sea de 15 puntos.
 
 ```{r paso_1}
 library(readr)
-iqs_df = read_csv("data_1/iq.csv", show_col_types = FALSE)
+iqs_df = read_csv("all_data/all_data/data_1/iq.csv", show_col_types = FALSE)
 mean(iqs_df$iq)
 ```
 
@@ -97,7 +97,7 @@ se dispone de los datos almacenados en "pieces.csv". Halla un intervalo de confi
 al 99\% para $\sigma^2$.
 
 ```{r}
-pieces = read_csv("data_1/pieces.csv", show_col_types = FALSE)
+pieces = read_csv("all_data/all_data/data_1/pieces.csv", show_col_types = FALSE)
 x = pieces$piece_size_cm
 n <- length(x)
 (n - 1 ) * var(x) / qchisq(c(0.995, 0.005), df = n - 1)

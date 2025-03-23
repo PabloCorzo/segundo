@@ -6,6 +6,18 @@
 
 void main(){
 
+
+	//APARTADO B
+
+	//en creacion de procesos primero se crea el padre y luego los hijos (ordenados segun el indice dado en el bucle de abajo)
+
+	//en cuanto a la ejecucion, siempre iran los hijos primero porque el padre espera a que los hijos terminen de ejecutar:
+	//p5,p6,p1 y p2 primero, luego p3 y p4, luego el proceso padre
+
+	//APARTADO C
+	
+
+
 	int rt;
 	int rd;
 	//id para apartado c

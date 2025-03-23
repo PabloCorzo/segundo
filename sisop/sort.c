@@ -8,9 +8,32 @@
 //lseek(fd,0,SEEK_SET);
 //shorter words go first
 
-void swap(int* ap, int* bp){
+void swap(int w1, int w2, int* arr1, char* arr2, int* arr3){
 	
+	int itemp;
+	char ctemp;
+
+	//swap in positions array
+	itemp = *(arr1+w2);
+	 
+	*(arr1+w2) = *(arr1+w1);
+
+	*(arr1+w1) = itemp;
 	
+
+	//swap in starters array
+	ctemp = *(arr2+w2);
+	 
+	*(arr2+w2) = *(arr2+w1);
+
+	*(arr2+w1) = ctemp;
+	
+	//swap in sizes array 
+	itemp = *(arr3+w2);
+	 
+	*(arr3+w2) = *(arr3+w1);
+
+	*(arr3+w1) = itemp;
 }
 
 void main(int argc, char *argv[]){
@@ -19,15 +42,18 @@ void main(int argc, char *argv[]){
 	
 	//open file
 	int fd = open(argv[1], O_CREAT | O_RDWR, 0666);
+	lseek(fd,0,SEEK_SET);
 	
 	
 	//for the first iteration, get amount of words and the size of the smallest one
+	int chars = 0;
 	char c;
 	int words_count = 0;
 	int smallest_word;
 	int current_word = 0;
-	while(read(fd,&c,1)){
-	
+	while(read(fd,&c,1) == 1){
+		// printf("\nreading %c\n",c);
+		chars = ++chars;
 		if((int) c == 32){
 			if(current_word < smallest_word) smallest_word = current_word;
 			current_word = 0;
@@ -38,35 +64,88 @@ void main(int argc, char *argv[]){
 	//since word count goes up by each space and final one doesnt have one after, we add up the last one statically
 	words_count++;
 	
-	lseek(fd,0,SEEK_SET);
-	
-	//array of indexes: position of first char of each word
 	int positions[words_count];
 	char starters[words_count];
-	//assume first word doesnt have anything before it
-	positions[0] = 1;
-	int index = 1;
-	int i = 1;
-	char prev;
+	int sizes[words_count];
+	char buffer[chars];
+	
+	lseek(fd,0,SEEK_SET);
+	int buffindex = 0;
 	while(read(fd,&c,1) == 1){
-		if(index == 1) starters[0] = c;
-		else if (((int) prev == 32)) starters[i-1] = c;
-		index++;
-		if((int) c == 32){
-			positions[i] = index;
-			i++;
+		if((int)c != 0)buffer[buffindex++] = c;
+		else break;
+	}
+
+	//fill three arrays:
+	//positions keeps indexes of first char of each word
+	//starters keeps said chars
+	//sizes keeps the size of each word
+
+	//assume first word doesnt have anything before it
+	positions[0] = 0;
+	int size = 0;
+	int words_written = 0;
+	int fdp = 0;
+	char previous_letter;
+	lseek(fd,0,SEEK_SET);
+	while(read(fd,&c,1)==1){
+		if(fdp == 0) starters[0] = c;
+		if (((int) previous_letter == 32)){
+			starters[words_written] = c;
+			positions[words_written] = fdp;
 		}
-		prev = c;
+		if((int) c == 32){
+			sizes[words_written] = size;
+			size = 0;
+			words_written++;
+		}
+		else size++;
+		previous_letter = c;
+		fdp++;
 	}
 	
-	for(int j = 0; j < words_count; j++)printf("%d %c\n ",positions[j],starters[j]);
-	
-	//iterate for the size of smallest word
-	//nested loop to convert all chars of n-1 position into int and bubble sort, should be possible to do just casting as int
-	//maybe just use smallest word as limit, in each comparision, if first letter is equal, move to the next until limit then dont care
-	for(int letter = 0; i < words_count -1; letter++){
+	sizes[words_written] = size;
+
+	//-----BUBBLE SORT-----
+	//subletter keeps track of how many letter deep we are comparing two words
+	int subletter;
+	for(int letter = 0; letter < words_count -1; letter++){
 		bool swapped = false;
+		//inner loop: in case its not swapped in any iteration, break the loop
+		for(int j = 0; j < words_count - 1;j++){
+			subletter = 1;
+			if((int) starters[j] == (int) starters[j+1]){
+				while(subletter < smallest_word){
+					char c1;
+					char c2;
+					lseek(fd,positions[j],SEEK_SET);
+					read(fd,&c1,1);
+					lseek(fd,positions[j+1],SEEK_SET);
+					read(fd,&c2,1);
+					if((int) c1 == (int) c2)subletter++;
+					else if((int) c1 > (int) c2){
+						swap(j,j+1, positions, starters, sizes);
+						swapped = true;
+					}
+				}
+			}
+			else if((int) starters[j] > (int) starters[j+1]){\
+				swap(j,j+1, positions, starters, sizes);
+				swapped = true;
+			}
+		}
+		 if(!swapped) break;
 	}
-	
-	//printf("The folder %s is %d words long and the smallest one is %d characters\n", argv[1], words_count,smallest_word);
-}
+	//AT THIS POINT ARRAYS ARE SORTED, NOW WE REWRITE
+	lseek(fd,0,SEEK_SET);
+	for(int i = 0; i < chars ;i++)printf("%c",buffer[i]);
+	for(int i = 0;i < words_count; i++){
+		int index = positions[i];
+		for(int j = 0; j <= sizes[i];j++){
+			char letter = buffer[positions[i]+j];
+			// buffer2[]
+			if((int)letter == 0) letter = 32;
+			write(fd,&letter,1);
+		}
+		}		
+	}

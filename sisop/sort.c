@@ -144,7 +144,7 @@ void main(int argc, char *argv[]){
 		for(int j = 0; j <= sizes[i];j++){
 			char letter = buffer[positions[i]+j];
 			// buffer2[]
-			if((int)letter == 0) letter = 32;
+			if((int)letter == 0) letter = ' ';
 			write(fd,&letter,1);
 		}
 		}		

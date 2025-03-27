@@ -51,19 +51,28 @@ void main(int argc, char *argv[]){
 	int words_count = 0;
 	int smallest_word;
 	int current_word = 0;
+	bool prev = false;
 	while(read(fd,&c,1) == 1){
 		// printf("\nreading %c\n",c);
 		chars = ++chars;
+		if(prev && ((int)c != 0 || (int)c != 32)) ++words_count;
 		if((int) c == 32){
+			prev = true;
 			if(current_word < smallest_word) smallest_word = current_word;
 			current_word = 0;
-			words_count++;
+			// words_count++;
 		}
-		else current_word++;
+		else{
+			current_word++;
+			prev = false;
+		}
 	}
 	//since word count goes up by each space and final one doesnt have one after, we add up the last one statically
 	words_count++;
 	
+
+	// printf("\n\nWORDS COUNT %d\n\n", words_count);
+
 	int positions[words_count];
 	char starters[words_count];
 	int sizes[words_count];
@@ -72,9 +81,12 @@ void main(int argc, char *argv[]){
 	lseek(fd,0,SEEK_SET);
 	int buffindex = 0;
 	while(read(fd,&c,1) == 1){
+		if((int)c <= 10) c = 1;
+		printf("added %d\n",(int)c);
 		if((int)c != 0)buffer[buffindex++] = c;
 		else break;
 	}
+	buffer[buffindex] = 32;
 
 	//fill three arrays:
 	//positions keeps indexes of first char of each word

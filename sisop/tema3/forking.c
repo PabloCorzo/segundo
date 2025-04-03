@@ -9,7 +9,8 @@ void main(){
 	printf("Proceso padre, de ppid %d y de pid %d \n",getppid(),getpid());
 	for(int i = 0; i <= 7; i++){
 		rt = fork();
-		//!= for chain, == for 1 gen
+		
+		//!= para ejercicio 4, == para ejercicio 3
 		if(rt != 0){
 		printf("Proceso de padre %d y de pid %d y de indice %d\n",getppid(),getpid(),i+1);
 		break;

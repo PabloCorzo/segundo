@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdbool.h>
+
 int vueltas = 1000000;
 int c = 0;
 bool turn = false;
@@ -12,14 +13,14 @@ void * process(void * args){
 	bool add = *(bool *) args;
 	for(int i = 0; i <= vueltas; i++){
 		if(add){
-		while(turn){}
-		c = c + 1;
-		turn = true;
+			while(turn){}
+			c = c + 1;
+			turn = true;
 		}
 		if(!add){
-		while(!turn){
-		c = c - 1;
-		turn = false;
+			while(!turn){}
+			c = c - 1;
+			turn = false;
 		}
 		}
 	}

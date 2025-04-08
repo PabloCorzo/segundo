@@ -11,8 +11,10 @@ void * process(void * args){
 
 
 	//peterson: 2 estados para acceso concurrente y turno para evitar interbloqueo
+	
 	bool add = *(bool *) args;
 	for(int i = 0; i <= vueltas; i++){
+	
 	while(busy){}
 	busy == true;
 	if(add) c = c + 1;

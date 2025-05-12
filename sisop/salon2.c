@@ -5,10 +5,11 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-sem_t salon,sofa,chair,employee,wait_time;
+sem_t salon,sofa,chair,employee,wait_time,mutex;
 pthread_t threads[50];
 int threads_id[50];
 pthread_t hairdressers[3];
+int n = 50;
 
 void * clients(void * args){
 	int arg = *(int *) args;
@@ -26,6 +27,11 @@ void * clients(void * args){
 }
 
 void * employees(void * args){
+	sem_wait(&mutex);
+	while(n > 0){
+	n--;
+	printf("%d\n",50-n);
+	sem_post(&mutex);
 	sem_wait(&employee);
 	printf("Empezando corte de pelo\n");
 	fflush(stdout);
@@ -35,13 +41,14 @@ void * employees(void * args){
 	sem_post(&wait_time);
 	sem_post(&chair);
 	sem_post(&salon);
-	employees(NULL);
+	}
 }
 
 
 
 
 void main(){
+sem_init(&mutex,0,1);
 sem_init(&salon,0,20);
 sem_init(&sofa,0,4);
 sem_init(&chair,0,3);
